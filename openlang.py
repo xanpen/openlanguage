@@ -134,7 +134,7 @@ def downloadDOC(savePath, doc_base_url):
 if __name__ == '__main__':
     reload(sys)
     sys.setdefaultencoding('utf8')
-    email = "13701384075"
-    password = "WANGxiaopeng6764"
+    email = "XXX"
+    password = "XXX"
     login(email, password)
     list('4')
