@@ -2,8 +2,7 @@
 import requests
 import os
 from bs4 import BeautifulSoup
-import urllib
-from urlparse import urlparse
+import urlparse3
 from io import open as iopen
 import sys
 
@@ -64,7 +63,7 @@ def list(level):
             soup_item_a = soup_item.find('a')
             item_url = soup_item_a.get('href')
             item_title = soup_item_a.find('h3').string
-            print u"start: page = " + str(page) + u" title = " + item_title
+            print(u"start: page = " + str(page) + u" title = " + item_title
             item(level, item_url, item_title)
 
         page += 1
@@ -75,7 +74,7 @@ def item(level, url, title):
     if not os.path.exists(savePath):
         os.makedirs(savePath)
     url = base_url + url
-    parsed_url = urlparse(url)
+    parsed_url = urlparse3.parse_url(url)
     paths = parsed_url.path.split('/')
     doc_base_url = base_url + "/" + paths[1] + "/" + paths[2]
     resp = session.get(url, headers=headers)
@@ -125,7 +124,7 @@ def downloadDOC(savePath, doc_base_url):
     with open(filetxt_dialogue, 'w') as f:
         f.write(full_dialogue)
     resp_v = session.get(vocabulary_url, headers=headers)
-    resp_c = session.get(vocabulary_url, headers=headers)
+    resp_c = session.get(culture_url, headers=headers)
     with open(filehtml_vocabulary, 'w') as f:
         f.write(resp_v.text)
     with open(filehtml_culture, 'w') as f:
