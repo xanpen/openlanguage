@@ -135,7 +135,7 @@ def downloadDOC(savePath, doc_base_url):
 
 if __name__ == '__main__':
     importlib.reload(sys)
-    email = "13701384075"
-    password = "WANGxiaopeng6764"
+    email = "xxx"
+    password = "xxx"
     login(email, password)
     list('1')
