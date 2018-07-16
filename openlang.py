@@ -1,11 +1,9 @@
-'''
-for python2.7
-'''
 #coding: utf-8
 import requests
 import os
 from bs4 import BeautifulSoup
-import urlparse3
+import urllib
+from urlparse import urlparse
 from io import open as iopen
 import sys
 
@@ -66,7 +64,7 @@ def list(level):
             soup_item_a = soup_item.find('a')
             item_url = soup_item_a.get('href')
             item_title = soup_item_a.find('h3').string
-            print(u"start: page = " + str(page) + u" title = " + item_title
+            print u"start: page = " + str(page) + u" title = " + item_title
             item(level, item_url, item_title)
 
         page += 1
@@ -77,7 +75,7 @@ def item(level, url, title):
     if not os.path.exists(savePath):
         os.makedirs(savePath)
     url = base_url + url
-    parsed_url = urlparse3.parse_url(url)
+    parsed_url = urlparse(url)
     paths = parsed_url.path.split('/')
     doc_base_url = base_url + "/" + paths[1] + "/" + paths[2]
     resp = session.get(url, headers=headers)
@@ -90,8 +88,7 @@ def item(level, url, title):
     soup_vocab_url = base_url + soup_vocab.split("mp3:").pop().split("'")[1]
     source = {'audio':soup_audio_url, 'dialogue':soup_dialogue_url, 'vocab':soup_vocab_url}
     downloadMP3(savePath, source)
-    downloadDOC(savePath, doc_base_url)
-    #exit(0)
+    downloadDOC(savePath, doc_base_url, paths[2])
 
 def downloadMP3(savePath, source):
     for key, url in source.items():
@@ -100,7 +97,7 @@ def downloadMP3(savePath, source):
         with iopen(filemp3, 'wb') as file:
             file.write(r.content)
 
-def downloadDOC(savePath, doc_base_url):
+def downloadDOC(savePath, doc_base_url, id):
     dialogue_url = doc_base_url + "/dialogue"
     vocabulary_url = doc_base_url + "/vocabulary"
     culture_url = doc_base_url + "/culture"
@@ -121,16 +118,16 @@ def downloadDOC(savePath, doc_base_url):
                 content += word
         sentence = soup_who + "\t\t" + content + "\r\n \t\t" + soup_what_chinese
         full_dialogue += "\r\n" + sentence
-    filetxt_dialogue = savePath.decode('utf-8') + "/" + u"dialogue.txt"
-    filehtml_vocabulary = savePath.decode('utf-8') + "/" + u"vocabulary.html"
-    filehtml_culture = savePath.decode('utf-8') + "/" + u"culture.html"
-    with open(filetxt_dialogue, 'w') as f:
+    filetxt_dialogue_id = savePath.decode('utf-8') + "/" + id + u"_dialogue.txt"
+    filehtml_vocabulary_id = savePath.decode('utf-8') + "/" + id + u"_vocabulary.html"
+    filehtml_culture_id = savePath.decode('utf-8') + "/" + id + u"_culture.html"
+    with open(filetxt_dialogue_id, 'w') as f:
         f.write(full_dialogue)
     resp_v = session.get(vocabulary_url, headers=headers)
     resp_c = session.get(culture_url, headers=headers)
-    with open(filehtml_vocabulary, 'w') as f:
+    with open(filehtml_vocabulary_id, 'w') as f:
         f.write(resp_v.text)
-    with open(filehtml_culture, 'w') as f:
+    with open(filehtml_culture_id, 'w') as f:
         f.write(resp_c.text)
 
 if __name__ == '__main__':
@@ -139,4 +136,4 @@ if __name__ == '__main__':
     email = "XXX"
     password = "XXX"
     login(email, password)
-    list('4')
+    list('2')
